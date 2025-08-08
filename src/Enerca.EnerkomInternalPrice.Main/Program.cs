@@ -1,4 +1,4 @@
-using Enerca.EnerkomInternalPrice.Console.MasRuze;
+using Enerca.EnerkomInternalPrice.Main.MasRuze;
 using Enerca.Logic.Common.Colors;
 using Enerca.Python;
 using Enerca.Python.Helpers;

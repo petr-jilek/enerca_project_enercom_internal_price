@@ -17,6 +17,7 @@ using Enerca.Logic.Modules.System.Db.SystemCP;
 using Enerca.Logic.Modules.System.Db.SystemCP.Pv;
 using Enerca.Logic.Modules.Tdd.Db.Extensions;
 using Enerca.Logic.Modules.Tdd.Db.Models;
+using Fastdo.Common.Extensions;
 
 namespace Enerca.EnerkomInternalPrice.Logic.Helpers;
 
@@ -56,7 +57,7 @@ public static class EIPPlotHelper
         {
             externalModel.Common.CPEntityIds =
             [
-                .. externalModel.Common.CPEntityIds.Where(id => cpEntitiesToRemoveIds.Contains(id) == false),
+                .. externalModel.Common.CPEntityIds.Where(cpEntitiesToRemoveIds.Contains),
             ];
         }
     }

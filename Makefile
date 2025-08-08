@@ -5,4 +5,4 @@ rebuild:
 
 .PHONY: run
 run:
-	cd src/Enerca.EnerkomInternalPrice.Console && dotnet run
+	cd src/Enerca.EnerkomInternalPrice.Main && dotnet run
