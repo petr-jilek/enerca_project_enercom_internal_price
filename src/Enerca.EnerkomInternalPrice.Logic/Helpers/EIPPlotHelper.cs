@@ -41,11 +41,14 @@ public static class EIPPlotHelper
 
     public static void RemoveBgs(ComputeModelDb db)
     {
-        var cpEntitiesToRemove = new List<ICPEntityChangingAnnually>();
+        var cpEntitiesToRemove = new List<CPEntityDb>();
 
         foreach (var cpEntity in db.CPEntities)
             if (cpEntity.InfoBasic.Tags.Contains(EIPPlotConsts.TagBg))
-                db.CPEntities.Remove(cpEntity);
+                cpEntitiesToRemove.Add(cpEntity);
+
+        foreach (var cpEntity in cpEntitiesToRemove)
+            db.CPEntities.Remove(cpEntity);
 
         var cpEntitiesToRemoveIds = db.CPEntities.Select(x => x.InfoBasic.Id).ToList();
 

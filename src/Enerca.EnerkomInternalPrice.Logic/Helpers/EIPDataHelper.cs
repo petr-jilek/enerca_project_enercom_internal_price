@@ -46,9 +46,9 @@ public static class EIPDataHelper
             var item = itemWithValues.Data;
 
             var tags = new List<string>();
-            if (item.ProductionType_.Contains(EIPPlotConsts.TagPv))
+            if (item.ProductionType_.Contains(EIPPlotConsts.TagPv) || item.ProductionType_.Contains("fve"))
                 tags.Add(EIPPlotConsts.TagPv);
-            if (item.ProductionType_.Contains(EIPPlotConsts.TagBg))
+            if (item.ProductionType_.Contains(EIPPlotConsts.TagBg) || item.ProductionType_.Contains("bp"))
                 tags.Add(EIPPlotConsts.TagBg);
 
             var cpEntity = new CPEntityDb

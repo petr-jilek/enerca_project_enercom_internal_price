@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Abstractions;
 using Enerca.Logic.Modules.CPEntity.Abstractions;
@@ -110,7 +111,13 @@ public class PlotM2CurrentStateEconomyService(EIPPlotSettings settings)
             x.Item1.EnergyTariffs.Electricity.As<EnergyTariffElectricityFixed>().VariableSell;
 
         static float greenBonusPropertyPredicate((ICPEntity, ICPEntityResult) x) =>
-            float.TryParse(x.Item1.InfoBasic.Dict["GreenBonus"], out float greenBonus) ? greenBonus : 0;
+            JsonSerializer
+                .Deserialize<EIPCPEntityData>(
+                    x.Item1.InfoBasic.Note
+                        ?? throw new Exception($"Note is empty for cpEntity with label: {x.Item1.InfoBasic.Label}")
+                )
+                ?.GreenBonus_
+            ?? throw new Exception($"Note is not deserializable for cpEntity with label: {x.Item1.InfoBasic.Label}");
 
         static float sellPriceWithGreenBonusPropertyPredicate((ICPEntity, ICPEntityResult) x)
         {
@@ -121,7 +128,12 @@ public class PlotM2CurrentStateEconomyService(EIPPlotSettings settings)
         }
 
         static float greenBonusYearToPropertyPredicate((ICPEntity, ICPEntityResult) x) =>
-            int.TryParse(x.Item1.InfoBasic.Dict["GreenBonusYearTo"], out int greenBonusYearTo) ? greenBonusYearTo : 0;
+            JsonSerializer
+                .Deserialize<EIPCPEntityData>(
+                    x.Item1.InfoBasic.Note
+                        ?? throw new Exception($"Note is empty for cpEntity with label: {x.Item1.InfoBasic.Label}")
+                )
+                ?.GreenBonusYearTo ?? -1;
 
         await Plot(
             name: "CashFlowSell",
@@ -174,8 +186,8 @@ public class PlotM2CurrentStateEconomyService(EIPPlotSettings settings)
             yLabel: "Rok",
             propertyPredicate: greenBonusYearToPropertyPredicate,
             yLogScale: false,
-            yMin: greenBonusYearToList.Min(),
-            yMax: greenBonusYearToList.Max(),
+            yMin: greenBonusYearToList.Min() - 1,
+            yMax: greenBonusYearToList.Max() + 1,
             yTicksFormatter: (x) => x.ToInt().ToString()
         );
     }

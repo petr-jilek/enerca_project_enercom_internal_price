@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Abstractions;
 using Enerca.Logic.Modules.EnergyTariff.Implementations.Implementations.Electricity.Fixed;
@@ -36,9 +37,12 @@ public class PlotM3LaddersService(EIPPlotSettings settings)
 
             var installedPower = producersIn
                 .Select(x =>
-                    float.TryParse(x.InfoBasic.Dict["ElectricityInstalledPower"], out float installedPower_)
-                        ? installedPower_
-                        : 0
+                    JsonSerializer
+                        .Deserialize<EIPCPEntityData>(
+                            x.InfoBasic.Note
+                                ?? throw new Exception($"Note is empty for cpEntity with label: {x.InfoBasic.Label}")
+                        )
+                        ?.ElectricityInstalledPower ?? 0
                 )
                 .Sum();
 
