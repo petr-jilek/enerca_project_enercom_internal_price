@@ -44,22 +44,22 @@ public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
             var electricityFinal = cpResultPre.EnergyStateFinal.Electricity;
 
             await PlotCP(
-                path: GetPath(fileName: "Initial", dir: dir),
+                path: GetPath(fileName: "", dir: dir.AddPath("Initial")),
                 cValues: [.. electricityInitial.Consumption.Values],
                 pValues: [.. electricityInitial.Production.Values]
             );
             await PlotCP(
-                path: GetPath(fileName: "InitialBalanced", dir: dir),
+                path: GetPath(fileName: "", dir: dir.AddPath("InitialBalanced")),
                 cValues: [.. electricityInitialBalanced.Consumption.Values],
                 pValues: [.. electricityInitialBalanced.Production.Values]
             );
             await PlotCP(
-                path: GetPath(fileName: "FinalSystem", dir: dir),
+                path: GetPath(fileName: "", dir: dir.AddPath("FinalSystem")),
                 cValues: [.. electricityFinalSystem.Consumption.Values],
                 pValues: [.. electricityFinalSystem.Production.Values]
             );
             await PlotCP(
-                path: GetPath(fileName: "Final", dir: dir),
+                path: GetPath(fileName: "", dir: dir.AddPath("Final")),
                 cValues: [.. electricityFinal.Consumption.Values],
                 pValues: [.. electricityFinal.Production.Values]
             );
@@ -155,22 +155,22 @@ public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
         }
 
         await PlotCP(
-            path: GetPath(fileName: "Pv", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("Pv")),
             cValues: [.. pvConsumption.Values],
             pValues: [.. pvProduction.Values]
         );
         await PlotCP(
-            path: GetPath(fileName: "PvBalancedSeparately", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("PvBalancedSeparately")),
             cValues: [.. pvConsumptionBalanced.Values],
             pValues: [.. pvProductionBalanced.Values]
         );
         await PlotCP(
-            path: GetPath(fileName: "Bg", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("Bg")),
             cValues: [.. bpConsumption.Values],
             pValues: [.. bpProduction.Values]
         );
         await PlotCP(
-            path: GetPath(fileName: "BgBalancedSeparately", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("BgBalancedSeparately")),
             cValues: [.. bpConsumptionBalanced.Values],
             pValues: [.. bpProductionBalanced.Values]
         );
@@ -181,12 +181,12 @@ public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
         bpCP.Mutable_Balance();
 
         await PlotCP(
-            path: GetPath(fileName: "PvBalanced", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("PvBalanced")),
             cValues: [.. pvCP.Consumption.Values],
             pValues: [.. pvCP.Production.Values]
         );
         await PlotCP(
-            path: GetPath(fileName: "BgBalanced", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("BgBalanced")),
             cValues: [.. bpCP.Consumption.Values],
             pValues: [.. bpCP.Production.Values]
         );
@@ -194,7 +194,7 @@ public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
         var electricityTotal = result.EnergyStateInitial.Clone().Electricity;
 
         await PlotCP(
-            path: GetPath(fileName: "Total", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("Total")),
             cValues: [.. electricityTotal.Consumption.Values],
             pValues: [.. electricityTotal.Production.Values]
         );
@@ -203,7 +203,7 @@ public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
         electricityTotalClone.Mutable_Balance();
 
         await PlotCP(
-            path: GetPath(fileName: "TotalBalanced", dir: dir),
+            path: GetPath(fileName: "", dir: dir.AddPath("TotalBalanced")),
             cValues: [.. electricityTotalClone.Consumption.Values],
             pValues: [.. electricityTotalClone.Production.Values]
         );

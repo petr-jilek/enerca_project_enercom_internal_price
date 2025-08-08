@@ -58,6 +58,7 @@ public static class EIPDataHelper
                     Label = item.Id,
                     Name = item.Name,
                     Address = item.Address,
+                    Tags = tags,
                     Note = JsonHelper.ToJson(item),
                 },
                 InfoExternal = new InfoExternalDb { PlaceId = item.Id },

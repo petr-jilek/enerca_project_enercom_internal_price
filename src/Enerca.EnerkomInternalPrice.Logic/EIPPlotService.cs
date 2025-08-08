@@ -1,9 +1,10 @@
 using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
+using Enerca.EnerkomInternalPrice.Logic.Plot;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
 
-namespace Enerca.EnerkomInternalPrice.Logic.Plot;
+namespace Enerca.EnerkomInternalPrice.Logic;
 
 public class EIPPlotService(EIPPlotSettings settings)
 {
