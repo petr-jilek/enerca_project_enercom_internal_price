@@ -7,6 +7,7 @@ public class EIPPlotSettings
 {
     public required PathSettings PathSettings { get; set; }
     public required IFormatting Formatting { get; set; }
+    public required Func<float, string> FormatFloat { get; set; }
 
     public int EvaluationYears { get; set; } = 25;
     public int ComputeYear { get; set; } = 0;

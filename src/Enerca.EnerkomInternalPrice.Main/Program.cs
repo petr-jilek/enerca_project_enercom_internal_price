@@ -1,4 +1,5 @@
 using Enerca.EnerkomInternalPrice.Main.MasRuze;
+using Enerca.EnerkomInternalPrice.Main.MasSrdce;
 using Enerca.Logic.Common.Colors;
 using Enerca.Python;
 using Enerca.Python.Helpers;
@@ -12,4 +13,5 @@ EnercaPythonSettings.DefaultFormats = [FileExtensionConsts.PNG];
 
 PythonHelper.Initialize();
 
-await MasRuzeRun.RunAsync();
+// await MasRuzeRun.RunAsync();
+await MasSrdceRun.RunAsync();

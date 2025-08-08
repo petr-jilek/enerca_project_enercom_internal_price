@@ -3,13 +3,13 @@ using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Fastdo.Common.Modules.Formattings.Implementations;
 
-namespace Enerca.EnerkomInternalPrice.Main.MasRuze;
+namespace Enerca.EnerkomInternalPrice.Main.MasSrdce;
 
-public class MasRuzeRun
+public class MasSrdceRun
 {
     public static async Task RunAsync()
     {
-        var pathSettings = new EIPPathSettings { PathProject = new() { DirPath = "MasRuze" } };
+        var pathSettings = new EIPPathSettings { PathProject = new() { DirPath = "MasSrdce" } };
 
         var computeModel = await EIPDataHelper.GetComputeModelAsync(pathSettings: pathSettings);
 

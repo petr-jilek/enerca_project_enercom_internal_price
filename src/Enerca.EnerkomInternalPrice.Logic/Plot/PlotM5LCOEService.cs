@@ -240,7 +240,7 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
                 legends: legends,
                 colors: colors,
                 scientificNotationAxisY: false,
-                yTicksFormatter: x => x.ToString().Replace(".", ","),
+                yTicksFormatter: settings.FormatFloat,
                 xLogScale: xLogScale
             ),
             plts: [PythonPlotHelper.Plot]
@@ -278,7 +278,7 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
                 legends: legends,
                 colors: colors,
                 scientificNotationAxisY: false,
-                yTicksFormatter: x => x.ToString().Replace(".", ","),
+                yTicksFormatter: settings.FormatFloat,
                 xLogScale: xLogScale
             ),
             plts: [PythonPlotHelper.Plot]
