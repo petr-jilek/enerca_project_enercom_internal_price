@@ -1,4 +1,5 @@
-using Enerca.EnerkomInternalPrice.Console.Models;
+using Enerca.EnerkomInternalPrice.Logic.Consts;
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Abstractions;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.CPEntity.Db;
@@ -14,7 +15,7 @@ using Enerca.Logic.Modules.Tdd.Db.Models;
 using Enerca.Logic.Modules.Tdd.Db.Modules;
 using Fastdo.Common.Modules.Files.Helpers;
 
-namespace Enerca.EnerkomInternalPrice.Console.Helpers;
+namespace Enerca.EnerkomInternalPrice.Logic.Helpers;
 
 public static class EIPDataHelper
 {
@@ -44,11 +45,17 @@ public static class EIPDataHelper
         {
             var item = itemWithValues.Data;
 
+            var tags = new List<string>();
+            if (item.ProductionType_.Contains(EIPPlotConsts.TagPv))
+                tags.Add(EIPPlotConsts.TagPv);
+            if (item.ProductionType_.Contains(EIPPlotConsts.TagBg))
+                tags.Add(EIPPlotConsts.TagBg);
+
             var cpEntity = new CPEntityDb
             {
                 InfoBasic = new InfoBasicDb
                 {
-                    Id = item.Id,
+                    Label = item.Id,
                     Name = item.Name,
                     Address = item.Address,
                     Note = JsonHelper.ToJson(item),

@@ -1,3 +1,5 @@
+using Enerca.EnerkomInternalPrice.Logic.Helpers;
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
 using Enerca.Logic.Modules.Tdd.Db.Models;
@@ -8,7 +10,7 @@ using Enerca.Python.Models;
 using Fastdo.Common.Extensions;
 using Fastdo.Common.Modules.Files.Models;
 
-namespace Enerca.EnerkomInternalPrice.Plot.Services;
+namespace Enerca.EnerkomInternalPrice.Logic.Plot;
 
 public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPriceState state)
 {

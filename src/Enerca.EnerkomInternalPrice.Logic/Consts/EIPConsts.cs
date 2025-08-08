@@ -1,4 +1,4 @@
-namespace Enerca.EnerkomInternalPrice.Plot;
+namespace Enerca.EnerkomInternalPrice.Logic.Consts;
 
 public static class EIPPlotConsts
 {

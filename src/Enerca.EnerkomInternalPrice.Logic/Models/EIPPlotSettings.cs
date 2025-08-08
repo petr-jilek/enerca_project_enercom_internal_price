@@ -1,7 +1,7 @@
 using Fastdo.Common.Modules.Files.Models;
 using Fastdo.Common.Modules.Formattings;
 
-namespace Enerca.EnerkomInternalPrice.Plot;
+namespace Enerca.EnerkomInternalPrice.Logic.Models;
 
 public class EIPPlotSettings
 {

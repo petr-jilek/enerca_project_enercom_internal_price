@@ -1,7 +1,7 @@
 using Fastdo.Common.Consts;
 using Fastdo.Common.Modules.Files.Models;
 
-namespace Enerca.EnerkomInternalPrice.Console.Models;
+namespace Enerca.EnerkomInternalPrice.Logic.Models;
 
 public class EIPPathSettings
 {

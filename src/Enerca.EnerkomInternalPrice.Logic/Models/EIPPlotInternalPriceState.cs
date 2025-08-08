@@ -1,4 +1,4 @@
-namespace Enerca.EnerkomInternalPrice.Plot;
+namespace Enerca.EnerkomInternalPrice.Logic.Models;
 
 public class EIPPlotInternalPriceState
 {

@@ -1,9 +1,9 @@
-using Enerca.EnerkomInternalPrice.Console.Models;
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Fastdo.Common.Extensions;
 using Fastdo.Common.Modules.Files.Helpers;
 using Fastdo.Common.Modules.Files.Models;
 
-namespace Enerca.EnerkomInternalPrice.Console.Helpers;
+namespace Enerca.EnerkomInternalPrice.Logic.Helpers;
 
 public static class EIPCsvHelper
 {

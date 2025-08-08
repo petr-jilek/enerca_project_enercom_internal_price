@@ -1,3 +1,5 @@
+using Enerca.EnerkomInternalPrice.Logic.Helpers;
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Common.Colors;
 using Enerca.Logic.Modules.Compute.Abstractions;
 using Enerca.Logic.Modules.Compute.Db;
@@ -10,7 +12,7 @@ using Fastdo.Common.Extensions;
 using Fastdo.Common.Modules.Files.Models;
 using Fastdo.Common.Modules.Maths.Consts;
 
-namespace Enerca.EnerkomInternalPrice.Plot.Services;
+namespace Enerca.EnerkomInternalPrice.Logic.Plot;
 
 public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceState state)
 {

@@ -1,3 +1,4 @@
+using Enerca.EnerkomInternalPrice.Logic.Consts;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.CPEntity.Abstractions;
 using Enerca.Logic.Modules.CPEntity.Db;
@@ -17,7 +18,7 @@ using Enerca.Logic.Modules.System.Db.SystemCP.Pv;
 using Enerca.Logic.Modules.Tdd.Db.Extensions;
 using Enerca.Logic.Modules.Tdd.Db.Models;
 
-namespace Enerca.EnerkomInternalPrice.Plot;
+namespace Enerca.EnerkomInternalPrice.Logic.Helpers;
 
 public static class EIPPlotHelper
 {

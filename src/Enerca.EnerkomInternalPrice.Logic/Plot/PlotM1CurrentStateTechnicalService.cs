@@ -1,3 +1,5 @@
+using Enerca.EnerkomInternalPrice.Logic.Consts;
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Abstractions;
 using Enerca.Logic.Modules.Energy.Implementations.Implementations.ScalingUp;
 using Enerca.Logic.Modules.Tdd.Mappers.Extensions;
@@ -6,7 +8,7 @@ using Enerca.Python.Models;
 using Fastdo.Common.Extensions;
 using Fastdo.Common.Modules.Files.Models;
 
-namespace Enerca.EnerkomInternalPrice.Plot.Services;
+namespace Enerca.EnerkomInternalPrice.Logic.Plot;
 
 public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
 {

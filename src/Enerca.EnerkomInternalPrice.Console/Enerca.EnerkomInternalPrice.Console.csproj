@@ -20,6 +20,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Enerca.EnerkomInternalPrice.Plot/Enerca.EnerkomInternalPrice.Plot.csproj" />
+    <ProjectReference Include="../Enerca.EnerkomInternalPrice.Logic/Enerca.EnerkomInternalPrice.Logic.csproj" />
   </ItemGroup>
 </Project>

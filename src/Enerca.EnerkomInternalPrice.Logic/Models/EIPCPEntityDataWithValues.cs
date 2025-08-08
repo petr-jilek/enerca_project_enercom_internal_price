@@ -1,4 +1,4 @@
-namespace Enerca.EnerkomInternalPrice.Console.Models;
+namespace Enerca.EnerkomInternalPrice.Logic.Models;
 
 public class EIPCPEntityDataWithValues
 {

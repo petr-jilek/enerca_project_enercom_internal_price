@@ -1,3 +1,4 @@
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Abstractions;
 using Enerca.Logic.Modules.EnergyTariff.Implementations.Implementations.Electricity.Fixed;
 using Enerca.Python.Helpers;
@@ -5,7 +6,7 @@ using Enerca.Python.Models;
 using Fastdo.Common.Extensions;
 using Fastdo.Common.Modules.Files.Models;
 
-namespace Enerca.EnerkomInternalPrice.Plot.Services;
+namespace Enerca.EnerkomInternalPrice.Logic.Plot;
 
 public class PlotM3LaddersService(EIPPlotSettings settings)
 {
