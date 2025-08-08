@@ -1,7 +1,6 @@
 using Enerca.EnerkomInternalPrice.Logic;
 using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
-using Enerca.Logic.Modules.Compute.Mappers;
 using Fastdo.Common.Modules.Formattings.Implementations;
 
 namespace Enerca.EnerkomInternalPrice.Main.MasRuze;
@@ -13,17 +12,6 @@ public class MasRuzeRun
         var pathSettings = new EIPPathSettings { PathProject = new() { DirPath = "MasRuze" } };
 
         var computeModel = await EIPDataHelper.GetComputeModelAsync(pathSettings: pathSettings);
-
-        // Console.WriteLine(computeModel.CPEntities.Count);
-
-        // EIPPlotHelper.AddCommunityDynamicModel(db: computeModel);
-        // EIPPlotHelper.RemoveBgs(db: computeModel);
-
-        // var model = await computeModel.ToModelAsync();
-
-        // Console.WriteLine(model.Compute(years: 1).PresentValue);
-
-        // return;
 
         var plotSettings = new EIPPlotSettings
         {

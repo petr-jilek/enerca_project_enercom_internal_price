@@ -16,8 +16,13 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
 {
     public async Task PlotAsync(ComputeModelDb db)
     {
-        await PlotWithoutBgAsync(db: db.Clone());
-        await PlotWithBgAsync(db: db.Clone());
+        var db_ = db.Clone();
+        var dbWithoutBg_ = db.Clone();
+
+        EIPPlotServiceHelper.RemoveBgs(db: dbWithoutBg_);
+
+        await PlotWithoutBgAsync(db: dbWithoutBg_);
+        await PlotWithBgAsync(db: db_);
     }
 
     private PathSettings GetPath(string fileName, string? dir = null) =>
@@ -64,6 +69,8 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
         var energySharedValuesList = new List<List<float>>();
         var npvValuesList = new List<List<float>>();
 
+        var helper = new EIPPlotServiceHelper(settings: settings);
+
         foreach (var annualConsumption in annualConsumptionValues)
         {
             var energySharedValues = new List<float>();
@@ -71,20 +78,17 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
 
             var db_ = db.Clone();
 
-            EIPPlotHelper.AddConsumption(
-                db: db_,
-                tdd: TddModuleElectricityCS2025.Tdd4,
-                annualConsumption: annualConsumption
-            );
+            helper.AddConsumption(db: db_, annualConsumption: annualConsumption, tdd: TddModuleElectricityCS2025.Tdd4);
 
             foreach (var installedPower in installedPowers)
             {
                 var db__ = db_.Clone();
 
-                EIPPlotHelper.AddPv(
+                await helper.AddPvAsync(
                     db: db__,
                     installedPower: installedPower,
-                    consumptionCoefficient: consumptionCoefficient
+                    consumptionCoefficient: consumptionCoefficient,
+                    tdd: TddModuleElectricityCS2025.Tdd4
                 );
 
                 var model = await db__.ToModelAsync();
@@ -199,6 +203,8 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
         var energySharedValuesList = new List<List<float>>();
         var npvValuesList = new List<List<float>>();
 
+        var helper = new EIPPlotServiceHelper(settings: settings);
+
         foreach (var tdd in tdds)
         {
             var energySharedValues = new List<float>();
@@ -210,7 +216,7 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
 
                 var db_ = db.Clone();
 
-                EIPPlotHelper.AddConsumption(db: db_, tdd: tdd, annualConsumption: annualConsumption);
+                helper.AddConsumption(db: db_, tdd: tdd, annualConsumption: annualConsumption);
 
                 var model = await db_.ToModelAsync();
                 var model0 = model.GetForYear(settings.ComputeYear);

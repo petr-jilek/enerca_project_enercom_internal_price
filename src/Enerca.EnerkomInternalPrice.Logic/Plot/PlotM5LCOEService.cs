@@ -21,7 +21,7 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
         var db_ = db.Clone();
         var dbWithoutBg_ = db.Clone();
 
-        EIPPlotHelper.RemoveBgs(db: dbWithoutBg_);
+        EIPPlotServiceHelper.RemoveBgs(db: dbWithoutBg_);
 
         var model = await db_.ToModelAsync();
         var modelWithoutBg = await dbWithoutBg_.ToModelAsync();

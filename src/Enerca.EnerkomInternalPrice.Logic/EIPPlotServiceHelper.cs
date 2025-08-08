@@ -1,6 +1,6 @@
 using Enerca.EnerkomInternalPrice.Logic.Consts;
+using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Db;
-using Enerca.Logic.Modules.CPEntity.Abstractions;
 using Enerca.Logic.Modules.CPEntity.Db;
 using Enerca.Logic.Modules.CPEntity.Db.Models;
 using Enerca.Logic.Modules.Energy.Db;
@@ -11,17 +11,17 @@ using Enerca.Logic.Modules.EnergyTariffInfo.Db;
 using Enerca.Logic.Modules.EnergyTariffInfo.Implementations.Consts.Electricity;
 using Enerca.Logic.Modules.External.Db;
 using Enerca.Logic.Modules.External.Db.Community;
+using Enerca.Logic.Modules.LargeVec.Db;
 using Enerca.Logic.Modules.OTValue.Db.DataTypes;
-using Enerca.Logic.Modules.System.Db;
-using Enerca.Logic.Modules.System.Db.SystemCP;
-using Enerca.Logic.Modules.System.Db.SystemCP.Pv;
 using Enerca.Logic.Modules.Tdd.Db.Extensions;
 using Enerca.Logic.Modules.Tdd.Db.Models;
+using Enerca.Logic.Vendor.PVGIS.Models;
+using Enerca.Logic.Vendor.PVGIS.Predefined;
 using Fastdo.Common.Extensions;
 
-namespace Enerca.EnerkomInternalPrice.Logic.Helpers;
+namespace Enerca.EnerkomInternalPrice.Logic;
 
-public static class EIPPlotHelper
+public class EIPPlotServiceHelper(EIPPlotSettings settings)
 {
     public static void AddCommunityDynamicModel(ComputeModelDb db)
     {
@@ -62,7 +62,7 @@ public static class EIPPlotHelper
         }
     }
 
-    public static void AddConsumption(ComputeModelDb db, TddModuleWithItem tdd, float annualConsumption)
+    public void AddConsumption(ComputeModelDb db, float annualConsumption, TddModuleWithItem tdd)
     {
         var cpEntity = new CPEntityDb
         {
@@ -85,9 +85,9 @@ public static class EIPPlotHelper
 
                     Fixed = new EnergyTariffElectricityFixedDb
                     {
-                        VariableEnergy = 3,
-                        VariableNetworkCharges = 3,
-                        VariableSell = 0.5f,
+                        VariableEnergy = settings.VariableEnergyPrice,
+                        VariableNetworkCharges = settings.VariableNetworkChargesPrice,
+                        VariableSell = settings.VariableSellPVPrice,
                         Fixed = 0,
                     },
                 },
@@ -111,8 +111,25 @@ public static class EIPPlotHelper
                 externalModel.Common.CPEntityIds.Add(cpEntity.InfoBasic.Id);
     }
 
-    public static void AddPv(ComputeModelDb db, float installedPower, float consumptionCoefficient)
+    public async Task AddPvAsync(
+        ComputeModelDb db,
+        float installedPower,
+        float consumptionCoefficient,
+        TddModuleWithItem tdd
+    )
     {
+        var productionValues =
+            await EnercaPVGISPredefined.PVGIS.GetPvRelativeProduction(
+                request: new EnercaPVGISHourlyRadiationRequest(
+                    latitude: settings.Latitude,
+                    longitude: settings.Longitude,
+                    angle: settings.Angle,
+                    aspect: settings.Aspect
+                )
+            ) ?? throw new Exception("Error getting relative production from PVGIS");
+
+        productionValues = productionValues.ScalarMultiply(scalar: installedPower);
+
         var cpEntity = new CPEntityDb
         {
             InfoBasic = new InfoBasicDb { Id = "pv_virtual", Name = "PV Virtual" },
@@ -134,9 +151,9 @@ public static class EIPPlotHelper
 
                     Fixed = new EnergyTariffElectricityFixedDb
                     {
-                        VariableEnergy = 3,
-                        VariableNetworkCharges = 3,
-                        VariableSell = 0.5f,
+                        VariableEnergy = settings.VariableEnergyPrice,
+                        VariableNetworkCharges = settings.VariableNetworkChargesPrice,
+                        VariableSell = settings.VariableSellPVPrice,
                         Fixed = 0,
                     },
                 },
@@ -147,33 +164,24 @@ public static class EIPPlotHelper
                 {
                     Consumption = new EnergyVecCompoundedDb
                     {
-                        EnergyVecs = [new EnergyVecDb { AnnualValue = 1000 * installedPower * consumptionCoefficient }],
+                        EnergyVecs =
+                        [
+                            new EnergyVecDb
+                            {
+                                AnnualValue = 1000 * installedPower * consumptionCoefficient,
+                                Tdd = tdd.ToDb(),
+                            },
+                        ],
+                    },
+                    Production = new EnergyVecCompoundedDb
+                    {
+                        EnergyVecs =
+                        [
+                            new EnergyVecDb { Values = new LargeVecFloatDbRelation { Values = [.. productionValues] } },
+                        ],
                     },
                 },
             },
-            Systems =
-            [
-                new SystemDb
-                {
-                    SystemCP = new SystemCPSystemDb
-                    {
-                        Pv = new PvSystemDb
-                        {
-                            Entities =
-                            [
-                                new PvSystemEntityDb
-                                {
-                                    Angle = 35,
-                                    Aspect = 0,
-                                    InstalledPower = new OTValueFloatDb { Value = installedPower },
-                                },
-                            ],
-                            Latitude = 14.5595834f,
-                            Longitude = 48.9431537f,
-                        },
-                    },
-                },
-            ],
         };
 
         db.CPEntities.Add(cpEntity);

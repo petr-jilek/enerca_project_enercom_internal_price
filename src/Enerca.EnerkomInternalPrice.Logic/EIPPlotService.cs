@@ -1,4 +1,3 @@
-using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.EnerkomInternalPrice.Logic.Plot;
 using Enerca.Logic.Modules.Compute.Db;
@@ -12,7 +11,7 @@ public class EIPPlotService(EIPPlotSettings settings)
     {
         var db_ = db.Clone();
 
-        EIPPlotHelper.AddCommunityDynamicModel(db: db_);
+        EIPPlotServiceHelper.AddCommunityDynamicModel(db: db_);
 
         var state = new EIPPlotInternalPriceState();
 
@@ -27,9 +26,9 @@ public class EIPPlotService(EIPPlotSettings settings)
         var model = await db_.ToModelAsync();
         var model0 = model.GetForYear(settings.ComputeYear);
 
-        // await m1.PlotAsync(model: model0);
-        // await m2.PlotAsync(model: model0);
-        // await m3.PlotAsync(model: model0);
+        await m1.PlotAsync(model: model0);
+        await m2.PlotAsync(model: model0);
+        await m3.PlotAsync(model: model0);
         await m4.PlotAsync(db: db_);
         await m5.PlotAsync(db: db_);
         await m6.PlotAsync(db: db_);

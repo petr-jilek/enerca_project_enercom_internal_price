@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Enerca.EnerkomInternalPrice.Logic.Consts;
 using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
@@ -19,7 +20,7 @@ public class PlotM7CaseService(EIPPlotSettings settings)
         var db_ = db.Clone();
         var dbWithoutBg_ = db.Clone();
 
-        EIPPlotHelper.RemoveBgs(db: dbWithoutBg_);
+        EIPPlotServiceHelper.RemoveBgs(db: dbWithoutBg_);
 
         await PlotCurrentAsync(db: db_, dbWithoutBg: dbWithoutBg_);
 
@@ -185,14 +186,18 @@ public class PlotM7CaseService(EIPPlotSettings settings)
 
             foreach (var cpEntity in cpEntities)
             {
-                var label = cpEntity.InfoBasic.Id;
+                var label = cpEntity.InfoBasic.Label;
+                var data =
+                    JsonSerializer.Deserialize<EIPCPEntityData>(
+                        cpEntity.InfoBasic.Note ?? throw new Exception("No note")
+                    ) ?? throw new Exception("No data");
 
                 if (cpEntity.InfoBasic.Tags.Contains(EIPPlotConsts.TagBg))
-                    label += $" - BP ({cpEntity.InfoBasic.Label})";
+                    label += $" - BP ({data.ProductionSystemId})";
                 else if (cpEntity.InfoBasic.Tags.Contains(EIPPlotConsts.TagPv))
-                    label += $" - PV ({cpEntity.InfoBasic.Label})";
+                    label += $" - PV ({data.ProductionSystemId})";
                 else
-                    label += $" - Spotřeba ({cpEntity.InfoBasic.Label})";
+                    label += $" - Spotřeba ({data.Tariff})";
 
                 labels.Add(label);
             }

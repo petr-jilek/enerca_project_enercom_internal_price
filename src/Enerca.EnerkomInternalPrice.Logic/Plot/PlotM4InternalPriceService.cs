@@ -18,7 +18,7 @@ public class PlotM4InternalPriceService(EIPPlotSettings settings, EIPPlotInterna
         var db_ = db.Clone();
         var dbWithoutBg_ = db.Clone();
 
-        EIPPlotHelper.RemoveBgs(db: dbWithoutBg_);
+        EIPPlotServiceHelper.RemoveBgs(db: dbWithoutBg_);
 
         await PlotInternalPriceBuy(db: db_);
         await PlotInternalPriceFee(db: db_, dbWithoutBg: dbWithoutBg_);
