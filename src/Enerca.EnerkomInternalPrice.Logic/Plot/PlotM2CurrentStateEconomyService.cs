@@ -48,6 +48,9 @@ public class PlotM2CurrentStateEconomyService(EIPPlotSettings settings)
                 .OrderByDescending(x => propertyPredicate(x))
                 .ToList();
 
+            if (cpEntityResultListFiltered.Count == 0)
+                return;
+
             await PlotHelper.PlotAsync(
                 data: new PlotData(
                     path: GetPath(fileName: name),
@@ -180,15 +183,16 @@ public class PlotM2CurrentStateEconomyService(EIPPlotSettings settings)
             .Where(x => x > 0)
             .ToList();
 
-        await Plot(
-            name: "GreenBonusYearTo",
-            title: "Rok ukončení zeleného bonusu",
-            yLabel: "Rok",
-            propertyPredicate: greenBonusYearToPropertyPredicate,
-            yLogScale: false,
-            yMin: greenBonusYearToList.Min() - 1,
-            yMax: greenBonusYearToList.Max() + 1,
-            yTicksFormatter: (x) => x.ToInt().ToString()
-        );
+        if (greenBonusYearToList.Count > 0)
+            await Plot(
+                name: "GreenBonusYearTo",
+                title: "Rok ukončení zeleného bonusu",
+                yLabel: "Rok",
+                propertyPredicate: greenBonusYearToPropertyPredicate,
+                yLogScale: false,
+                yMin: greenBonusYearToList.Min() - 1,
+                yMax: greenBonusYearToList.Max() + 1,
+                yTicksFormatter: (x) => x.ToInt().ToString()
+            );
     }
 }
