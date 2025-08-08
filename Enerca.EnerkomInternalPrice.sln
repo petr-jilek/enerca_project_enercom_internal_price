@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C30FB7A-E2C7-44BA-B6F6-030E4DEFBEDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enerca.EnerkomInternalPrice.Console", "src\Enerca.EnerkomInternalPrice.Console\Enerca.EnerkomInternalPrice.Console.csproj", "{21CCF883-EA0A-44D3-99A3-D6999FD6A483}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enerca.EnerkomInternalPrice.Plot", "src\Enerca.EnerkomInternalPrice.Plot\Enerca.EnerkomInternalPrice.Plot.csproj", "{9E40A828-BD9B-4A90-ACFC-577F0D5D82C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21CCF883-EA0A-44D3-99A3-D6999FD6A483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21CCF883-EA0A-44D3-99A3-D6999FD6A483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21CCF883-EA0A-44D3-99A3-D6999FD6A483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21CCF883-EA0A-44D3-99A3-D6999FD6A483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E40A828-BD9B-4A90-ACFC-577F0D5D82C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E40A828-BD9B-4A90-ACFC-577F0D5D82C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E40A828-BD9B-4A90-ACFC-577F0D5D82C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E40A828-BD9B-4A90-ACFC-577F0D5D82C3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{21CCF883-EA0A-44D3-99A3-D6999FD6A483} = {7C30FB7A-E2C7-44BA-B6F6-030E4DEFBEDC}
+		{9E40A828-BD9B-4A90-ACFC-577F0D5D82C3} = {7C30FB7A-E2C7-44BA-B6F6-030E4DEFBEDC}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../packages/enerca_core_logic/src/logic/Enerca.Logic/Enerca.Logic.csproj" />
+    <ProjectReference Include="../../packages/enerca_core_python/src/Enerca.Python/Enerca.Python.csproj" />
+  </ItemGroup>
+</Project>

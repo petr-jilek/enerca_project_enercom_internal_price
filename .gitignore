@@ -1,0 +1,87 @@
+# common files
+.DS_Store
+.idea
+.vs
+.coverage
+.VSCodeCounter
+
+# common folders
+env
+out
+out__*
+cache
+bin
+obj
+dist
+dist-ssr
+build
+coverage
+node_modules
+
+# python
+__pycache__
+.ipynb_checkpoints
+*.egg-info
+
+# F#
+.fake
+
+# react, vite, next
+# see: https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.next
+.vercel
+
+# dependencies
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# misc
+*.pem
+*.log
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# react
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# latex
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.snm
+*.out
+*.nav
+*.toc
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.spl
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+*.vrb
+*.bcf*
+
+# c, c++
+*.o
+*.so

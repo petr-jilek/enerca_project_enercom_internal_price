@@ -1,0 +1,33 @@
+{
+  "recommendations": [
+    // Material Icons Theme
+    "pkief.material-icon-theme",
+    // Markdown Checkboxes
+    "bierner.markdown-checkbox",
+    // Tree for unfinished tasks
+    "gruntfuggly.todo-tree",
+    // VS Code Counter
+    "uctakeoff.vscode-counter",
+    // C# Dev Kit
+    "ms-dotnettools.csdevkit",
+    // CSharpier - Code formatter
+    "csharpier.csharpier-vscode",
+    // EditorConfig for VS Code
+    "editorconfig.editorconfig",
+    // Roslynator - Analyzers, Refactorings and Code Fixes for C#
+    "josefpihrt-vscode.roslynator",
+    // C# Dependency Graph
+    "danilocolombi.csharp-dependency-graph",
+    // Graphviz Interactive Preview - .dot files preview
+    "tintinweb.graphviz-interactive-preview",
+    // Prettier - Code formatter
+    "esbenp.prettier-vscode",
+    // C/C++
+    "ms-vscode.cpptools",
+    // Rainbow CSV
+    "mechatroner.rainbow-csv",
+    // Edit CSV
+    "janisdd.vscode-edit-csv"
+  ],
+  "unwantedRecommendations": []
+}

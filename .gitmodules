@@ -1,0 +1,6 @@
+[submodule "packages/enerca_core_logic"]
+	path = packages/enerca_core_logic
+	url = git@github.com:petr-jilek/enerca_core_logic.git
+[submodule "packages/enerca_core_python"]
+	path = packages/enerca_core_python
+	url = git@github.com:petr-jilek/enerca_core_python.git
