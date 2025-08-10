@@ -26,12 +26,12 @@ public class EIPPlotService(EIPPlotSettings settings)
         var model = await db_.ToModelAsync();
         var model0 = model.GetForYear(settings.ComputeYear);
 
-        await m1.PlotAsync(model: model0);
-        await m2.PlotAsync(model: model0);
-        await m3.PlotAsync(model: model0);
+        // await m1.PlotAsync(model: model0);
+        // await m2.PlotAsync(model: model0);
+        // await m3.PlotAsync(model: model0);
         await m4.PlotAsync(db: db_);
-        await m5.PlotAsync(db: db_);
-        await m6.PlotAsync(db: db_);
-        await m7.PlotAsync(db: db_);
+        // await m5.PlotAsync(db: db_);
+        // await m6.PlotAsync(db: db_);
+        // await m7.PlotAsync(db: db_);
     }
 }

@@ -56,7 +56,7 @@ public class PlotM4InternalPriceService(EIPPlotSettings settings, EIPPlotInterna
 
     private async Task PlotInternalPriceFee(ComputeModelDb db, ComputeModelDb dbWithoutBg)
     {
-        var priceValues = Enumerable.Range(0, 6).Select(x => (float)x / 2).ToList();
+        var priceValues = Enumerable.Range(0, 7).Select(x => (float)x / 2).ToList();
 
         var npvValues = await GetNpvValuesAsync(
             db: db,

@@ -49,17 +49,28 @@ public class EIPPlotServiceHelper(EIPPlotSettings settings)
                 cpEntitiesToRemove.Add(cpEntity);
 
         foreach (var cpEntity in cpEntitiesToRemove)
-            db.CPEntities.Remove(cpEntity);
+            RemoveCPEntity(db, cpEntity.InfoBasic.Id);
+    }
 
-        var cpEntitiesToRemoveIds = db.CPEntities.Select(x => x.InfoBasic.Id).ToList();
+    public static void RemoveCPEntities(ComputeModelDb db, Func<CPEntityDb, bool> predicate)
+    {
+        var cpEntitiesToRemove = db.CPEntities.Where(predicate).ToList();
+
+        foreach (var cpEntity in cpEntitiesToRemove)
+            db.CPEntities.Remove(cpEntity);
+    }
+
+    public static void RemoveCPEntity(ComputeModelDb db, string id)
+    {
+        var cpEntity =
+            db.CPEntities.FirstOrDefault(x => x.InfoBasic.Id == id)
+            ?? throw new Exception($"CPEntity with id {id} not found");
+
+        db.CPEntities.Remove(cpEntity);
 
         foreach (var externalModel in db.ExternalModels)
-        {
-            externalModel.Common.CPEntityIds =
-            [
-                .. externalModel.Common.CPEntityIds.Where(cpEntitiesToRemoveIds.Contains),
-            ];
-        }
+            if (externalModel.Community is not null)
+                externalModel.Common.CPEntityIds.Remove(id);
     }
 
     public void AddConsumption(ComputeModelDb db, float annualConsumption, TddModuleWithItem tdd)
