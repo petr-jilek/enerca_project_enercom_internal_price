@@ -27,13 +27,12 @@ public class EIPPlotServiceHelper(EIPPlotSettings settings)
     {
         var model = new ExternalModelDb
         {
-            Common = new ExternalModelCommonDb { CPEntityIds = [.. db.CPEntities.Select(x => x.InfoBasic.Id)] },
+            Info = new ExternalModelInfoDb { CPEntityIds = [.. db.CPEntities.Select(x => x.InfoBasic.Id)] },
             Community = new ExternalModelCommunityDb
             {
                 InternalPriceBuy = new OTValueFloatDb { Value = 0 },
                 InternalPriceFee = new OTValueFloatDb { Value = 0 },
-                // TODO: consts
-                Method = 3,
+                Method = ExternalModelCommunitySharingMethodConsts.Dynamic,
             },
         };
 
@@ -70,7 +69,7 @@ public class EIPPlotServiceHelper(EIPPlotSettings settings)
 
         foreach (var externalModel in db.ExternalModels)
             if (externalModel.Community is not null)
-                externalModel.Common.CPEntityIds.Remove(id);
+                externalModel.Info.CPEntityIds.Remove(id);
     }
 
     public void AddConsumption(ComputeModelDb db, float annualConsumption, TddModuleWithItem tdd)
@@ -119,7 +118,7 @@ public class EIPPlotServiceHelper(EIPPlotSettings settings)
 
         foreach (var externalModel in db.ExternalModels)
             if (externalModel.Community is not null)
-                externalModel.Common.CPEntityIds.Add(cpEntity.InfoBasic.Id);
+                externalModel.Info.CPEntityIds.Add(cpEntity.InfoBasic.Id);
     }
 
     public async Task AddPvAsync(
@@ -199,6 +198,6 @@ public class EIPPlotServiceHelper(EIPPlotSettings settings)
 
         foreach (var externalModel in db.ExternalModels)
             if (externalModel.Community is not null)
-                externalModel.Common.CPEntityIds.Add(cpEntity.InfoBasic.Id);
+                externalModel.Info.CPEntityIds.Add(cpEntity.InfoBasic.Id);
     }
 }

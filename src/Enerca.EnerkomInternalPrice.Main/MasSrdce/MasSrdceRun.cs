@@ -25,8 +25,8 @@ public class MasSrdceRun
             PathSettings = pathOut.WithAddedDirPath("all"),
             Formatting = new FormattingCs(currency: "Kč"),
             FormatFloat = x => x.ToString().Replace(".", ","),
-            M1 = false,
-            M6 = false,
+            M1 = true,
+            M6 = true,
         };
         await plotSettings.PlotService.PlotAsync(db: computeModel);
 
