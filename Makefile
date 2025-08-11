@@ -1,6 +1,13 @@
+.PHONY: tools-restore
+tools-restore:
+	cd src && dotnet tool restore
+
+.PHONY: format
+format:
+	cd src && dotnet csharpier format .
+
 .PHONY: rebuild
 rebuild:
-	dotnet clean
 	dotnet build --no-incremental
 
 .PHONY: run

@@ -1,4 +1,3 @@
-using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
@@ -87,7 +86,7 @@ public class PlotM4InternalPriceService(EIPPlotSettings settings, EIPPlotInterna
         }
 
         state.MinInternalPriceFee = getRoot(x0: xFirst, x1: xLast, y0: npvFirst, y1: npvLast);
-        state.MinInternalPriceFeeWithoutBP = getRoot(
+        state.MinInternalPriceFeeWithoutBg = getRoot(
             x0: xFirst,
             x1: xLast,
             y0: npvFirstWithoutBg,

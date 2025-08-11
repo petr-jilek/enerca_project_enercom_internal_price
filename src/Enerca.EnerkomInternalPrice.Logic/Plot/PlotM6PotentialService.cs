@@ -1,4 +1,3 @@
-using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
@@ -135,7 +134,7 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
 
         List<string?>? colors = [.. Enumerable.Repeat<string?>(null, ys.Count)];
 
-        ys.Add([state.MinEnergySharedWithoutBP, state.MinEnergySharedWithoutBP]);
+        ys.Add([state.MinEnergySharedWithoutBg, state.MinEnergySharedWithoutBg]);
         xs.Add([0, installedPowers.Last()]);
         legends.Add("Minimální potřeba sdílené energie");
         colors.Add("#3C0061");

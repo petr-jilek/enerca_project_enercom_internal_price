@@ -1,4 +1,3 @@
-using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Common.Colors;
 using Enerca.Logic.Modules.Compute.Abstractions;
@@ -47,11 +46,10 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
         var production = result.EnergyStateInitial.Electricity.Production.Total;
         var withoutBgProduction = resultWithoutBg.EnergyStateInitial.Electricity.Production.Total;
 
-        var variableCosts = 0.2f;
-        var fixedCosts = 700_000f;
-
         var energyValues = Enumerable.Range(0, 100).Select(x => 10_000 + 10 * MathF.Pow(x, 3)).ToList();
-        var lcoeValues = energyValues.Select(energy => (variableCosts * energy + fixedCosts) / energy).ToList();
+        var lcoeValues = energyValues
+            .Select(energy => (settings.VariableCosts * energy + settings.FixedCosts) / energy)
+            .ToList();
 
         for (var i = 0; i < lcoeValues.Count - 1; i++)
         {
@@ -71,12 +69,12 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
 
             if (state.MinInternalPriceFee < lcoe0 && state.MinInternalPriceFee > lcoe1)
                 state.MinEnergyShared = getEnergy(lcoe: state.MinInternalPriceFee);
-            if (state.MinInternalPriceFeeWithoutBP < lcoe0 && state.MinInternalPriceFeeWithoutBP > lcoe1)
-                state.MinEnergySharedWithoutBP = getEnergy(lcoe: state.MinInternalPriceFeeWithoutBP);
+            if (state.MinInternalPriceFeeWithoutBg < lcoe0 && state.MinInternalPriceFeeWithoutBg > lcoe1)
+                state.MinEnergySharedWithoutBg = getEnergy(lcoe: state.MinInternalPriceFeeWithoutBg);
         }
 
         state.MinAdditionalEnergyShared = state.MinEnergyShared - consumption;
-        state.MinAdditionalEnergySharedWithoutBP = state.MinEnergySharedWithoutBP - withoutBgProduction;
+        state.MinAdditionalEnergySharedWithoutBg = state.MinEnergySharedWithoutBg - withoutBgProduction;
 
         var energyLCOEValues = new EnergyLCOEValues
         {
@@ -89,6 +87,11 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
             Production = production,
         };
 
+        var all2LimitMin = withoutBgProduction * 0.8f;
+        var energyLowLimitMax = consumption * 1.2f;
+        var energyLow2LimitMin = withoutBgProduction * 0.5f;
+        var energyHighLimitMin = MathF.Min(MathF.Min(consumption, production), state.MinEnergyShared) * 0.8f;
+
         await PlotEnergyLCOEValues(
             fileName: "AllUnlabeled",
             subModule: subModule,
@@ -100,25 +103,26 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
         await PlotEnergyLCOEValues(
             fileName: "All2",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMin: withoutBgProduction * 0.8f),
+            values: energyLCOEValues.WithRange(energyMin: all2LimitMin),
             xLogScale: true
         );
         await PlotEnergyLCOEValues(
             fileName: "EnergyLow",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMax: consumption * 1.2f),
+            values: energyLCOEValues.WithRange(energyMax: energyLowLimitMax),
             xLogScale: true
         );
         await PlotEnergyLCOEValues(
             fileName: "EnergyLow2",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMin: withoutBgProduction * 0.7f, energyMax: consumption * 1.2f),
+            values: energyLCOEValues.WithRange(energyMin: energyLow2LimitMin, energyMax: energyLowLimitMax),
             xLogScale: true
         );
+
         await PlotEnergyLCOEValues(
             fileName: "EnergyHigh",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMin: consumption * 0.8f),
+            values: energyLCOEValues.WithRange(energyMin: energyHighLimitMin),
             xLogScale: true
         );
 
@@ -128,7 +132,9 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
 
         var lcoeValuesList = new List<List<float>>();
         foreach (var fixedValue in fixedValues)
-            lcoeValuesList.Add([.. energyValues.Select(energy => (variableCosts * energy + fixedValue) / energy)]);
+            lcoeValuesList.Add(
+                [.. energyValues.Select(energy => (settings.VariableCosts * energy + fixedValue) / energy)]
+            );
 
         energyLCOEValues.LCOEValuesList = lcoeValuesList;
         energyLCOEValues.Legends = [.. fixedValues.Select(x => settings.Formatting.FormatCurrency(x.ToInt()))];
@@ -144,25 +150,25 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
         await PlotEnergyLCOEValues(
             fileName: "All2",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMin: withoutBgProduction * 0.8f),
+            values: energyLCOEValues.WithRange(energyMin: all2LimitMin),
             xLogScale: true
         );
         await PlotEnergyLCOEValues(
             fileName: "EnergyLow",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMax: consumption * 1.2f),
+            values: energyLCOEValues.WithRange(energyMax: energyLowLimitMax),
             xLogScale: true
         );
         await PlotEnergyLCOEValues(
             fileName: "EnergyLow2",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMin: withoutBgProduction * 0.5f, energyMax: consumption * 1.2f),
+            values: energyLCOEValues.WithRange(energyMin: energyLow2LimitMin, energyMax: energyLowLimitMax),
             xLogScale: true
         );
         await PlotEnergyLCOEValues(
             fileName: "EnergyHigh",
             subModule: subModule,
-            values: energyLCOEValues.WithRange(energyMin: consumption * 0.8f),
+            values: energyLCOEValues.WithRange(energyMin: energyHighLimitMin),
             xLogScale: true
         );
     }
@@ -257,12 +263,12 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
         }
 
         if (
-            state.MinEnergySharedWithoutBP > energyValues.First()
-            && state.MinEnergySharedWithoutBP < energyValues.Last()
+            state.MinEnergySharedWithoutBg > energyValues.First()
+            && state.MinEnergySharedWithoutBg < energyValues.Last()
         )
         {
             ys.Add([0, lcoeMax]);
-            xs.Add([state.MinEnergySharedWithoutBP, state.MinEnergySharedWithoutBP + MathConsts.Epsilon]);
+            xs.Add([state.MinEnergySharedWithoutBg, state.MinEnergySharedWithoutBg + MathConsts.Epsilon]);
             legends.Add("Minimální sdílená energie bez BP");
             colors.Add("#3C0061");
         }

@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Enerca.EnerkomInternalPrice.Logic.Consts;
-using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
@@ -24,8 +23,8 @@ public class PlotM7CaseService(EIPPlotSettings settings)
 
         await PlotCurrentAsync(db: db_, dbWithoutBg: dbWithoutBg_);
 
-        await PlotModelAsync(db: db_, dir: "m2_WithBP");
-        await PlotModelAsync(db: dbWithoutBg_, dir: "m3_WithoutBP");
+        await PlotModelAsync(db: db_, dir: "m2_WithBg");
+        await PlotModelAsync(db: dbWithoutBg_, dir: "m3_WithoutBg");
     }
 
     private PathSettings GetPath(string fileName, string? dir = null) =>

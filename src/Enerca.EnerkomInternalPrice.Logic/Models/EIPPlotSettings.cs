@@ -9,6 +9,14 @@ public class EIPPlotSettings
     public required IFormatting Formatting { get; set; }
     public required Func<float, string> FormatFloat { get; set; }
 
+    public bool M1 { get; set; } = true;
+    public bool M2 { get; set; } = true;
+    public bool M3 { get; set; } = true;
+    public bool M4 { get; set; } = true;
+    public bool M5 { get; set; } = true;
+    public bool M6 { get; set; } = true;
+    public bool M7 { get; set; } = true;
+
     public int EvaluationYears { get; set; } = 25;
     public int ComputeYear { get; set; } = 0;
 
@@ -21,6 +29,11 @@ public class EIPPlotSettings
     public float Longitude { get; set; } = 14.5085012f;
     public float Angle { get; set; } = 35f;
     public float Aspect { get; set; } = 0f;
+
+    public float FixedCosts { get; set; } = 700_000f;
+    public float VariableCosts { get; set; } = 0.2f;
+
+    public EIPPlotService PlotService => new(settings: this);
 
     public PathSettings GetPath(string fileName, string module, string? dir = null)
     {
