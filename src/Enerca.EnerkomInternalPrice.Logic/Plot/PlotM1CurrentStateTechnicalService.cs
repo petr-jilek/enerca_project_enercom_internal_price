@@ -208,16 +208,16 @@ public class PlotM1CurrentStateTechnicalService(EIPPlotSettings settings)
             pValues: [.. electricityTotalClone.Production.Values]
         );
 
-        var consumptionWithoutBP = new EnergyVecScalingUp();
-        consumptionWithoutBP.Mutable_Increase(electricityTotal.Consumption);
-        consumptionWithoutBP.Mutable_Decrease(bpConsumption);
+        var consumptionWithoutBg = new EnergyVecScalingUp();
+        consumptionWithoutBg.Mutable_Increase(electricityTotal.Consumption);
+        consumptionWithoutBg.Mutable_Decrease(bpConsumption);
 
         await PlotHelper.PlotAsync(
             data: new PlotData(
-                path: GetPath(fileName: "ConsumptionWithoutBp", dir: dir),
+                path: GetPath(fileName: "ConsumptionWithoutBg", dir: dir),
                 ys:
                 [
-                    [.. consumptionWithoutBP.Values],
+                    [.. consumptionWithoutBg.Values],
                 ],
                 title: "Spotřeba bez spotřeby bioplynových stanic",
                 xLabel: "Čas",
