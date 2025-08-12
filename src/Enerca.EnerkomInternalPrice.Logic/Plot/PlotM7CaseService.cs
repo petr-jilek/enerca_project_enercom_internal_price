@@ -23,8 +23,8 @@ public class PlotM7CaseService(EIPPlotSettings settings)
 
         await PlotCurrentAsync(db: db_, dbWithoutBg: dbWithoutBg_);
 
-        await PlotModelAsync(db: db_, dir: "m2_WithBg");
-        await PlotModelAsync(db: dbWithoutBg_, dir: "m3_WithoutBg");
+        await PlotModelAsync(db: db_, dir: "M2WithBg");
+        await PlotModelAsync(db: dbWithoutBg_, dir: "M3WithoutBg");
     }
 
     private PathSettings GetPath(string fileName, string? dir = null) =>
@@ -32,7 +32,7 @@ public class PlotM7CaseService(EIPPlotSettings settings)
 
     private async Task PlotCurrentAsync(ComputeModelDb db, ComputeModelDb dbWithoutBg)
     {
-        var dir = "m1_Current";
+        var dir = "M1Current";
 
         var model = await db.ToModelAsync();
         var modelWithoutBg = await dbWithoutBg.ToModelAsync();

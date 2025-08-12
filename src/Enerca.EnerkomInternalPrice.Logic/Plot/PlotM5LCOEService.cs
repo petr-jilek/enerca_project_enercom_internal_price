@@ -82,7 +82,7 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
             LCOEValues = lcoeValues,
             LCOEValuesList = [],
             Legends = [],
-            WithoutBPProduction = withoutBgProduction,
+            WithoutBgProduction = withoutBgProduction,
             Consumption = consumption,
             Production = production,
         };
@@ -212,10 +212,10 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
 
         if (label)
         {
-            if (values.WithoutBPProduction is not null)
+            if (values.WithoutBgProduction is not null)
             {
                 ys.Add([0, lcoeMax]);
-                xs.Add([values.WithoutBPProduction.Value, values.WithoutBPProduction.Value + MathConsts.Epsilon]);
+                xs.Add([values.WithoutBgProduction.Value, values.WithoutBgProduction.Value + MathConsts.Epsilon]);
                 legends.Add("Výroba bez BP");
                 colors.Add("#305CDE");
             }
@@ -299,7 +299,7 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
         public required List<List<float>> LCOEValuesList { get; set; }
         public required List<string> Legends { get; set; }
 
-        public required float? WithoutBPProduction { get; set; }
+        public required float? WithoutBgProduction { get; set; }
         public required float? Consumption { get; set; }
         public required float? Production { get; set; }
 
@@ -327,13 +327,13 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
                 }
             }
 
-            var newWithoutBPProduction = WithoutBPProduction;
-            if (newWithoutBPProduction.HasValue)
+            var newWithoutBgProduction = WithoutBgProduction;
+            if (newWithoutBgProduction.HasValue)
             {
-                if (energyMin is not null && newWithoutBPProduction < energyMin)
-                    newWithoutBPProduction = null;
-                if (energyMax is not null && newWithoutBPProduction > energyMax)
-                    newWithoutBPProduction = null;
+                if (energyMin is not null && newWithoutBgProduction < energyMin)
+                    newWithoutBgProduction = null;
+                if (energyMax is not null && newWithoutBgProduction > energyMax)
+                    newWithoutBgProduction = null;
             }
 
             var newConsumption = Consumption;
@@ -360,7 +360,7 @@ public class PlotM5LCOEService(EIPPlotSettings settings, EIPPlotInternalPriceSta
                 LCOEValues = newLcoeValues,
                 LCOEValuesList = newLcoeValuesList,
                 Legends = Legends,
-                WithoutBPProduction = newWithoutBPProduction,
+                WithoutBgProduction = newWithoutBgProduction,
                 Consumption = newConsumption,
                 Production = newProduction,
             };

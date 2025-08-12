@@ -29,7 +29,7 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
 
     private async Task PlotWithoutBgAsync(ComputeModelDb db)
     {
-        var subModule = "M1WithoutBb";
+        var subModule = "M1WithoutBg";
 
         var annualConsumptionValues = new List<float>
         {
@@ -117,7 +117,7 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
         await PlotHelper.PlotAsync(
             data: new PlotData(
                 path: GetPath(
-                    "NewPvEnergySharedConsumptionCoefficient_" + consumptionCoefficient.ToString("N2"),
+                    "NewPvEnergyShared_ConsumptionCoefficient" + consumptionCoefficient.ToString("N2"),
                     dir: subModule
                 ),
                 ys: ys,
@@ -142,7 +142,7 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
         await PlotHelper.PlotAsync(
             data: new PlotData(
                 path: GetPath(
-                    "NewPvEnergySharedConsumptionCoefficient_" + consumptionCoefficient.ToString("N2") + "_Targets",
+                    "NewPvEnergyShared_ConsumptionCoefficient" + consumptionCoefficient.ToString("N2") + "_Targets",
                     dir: subModule
                 ),
                 ys: ys,
@@ -161,7 +161,7 @@ public class PlotM6PotentialService(EIPPlotSettings settings, EIPPlotInternalPri
         await PlotHelper.PlotAsync(
             data: new PlotData(
                 path: GetPath(
-                    "NewPvNPVConsumptionCoefficient_" + consumptionCoefficient.ToString("N2"),
+                    "NewPvNPV_ConsumptionCoefficient" + consumptionCoefficient.ToString("N2"),
                     dir: subModule
                 ),
                 ys: npvValuesList,

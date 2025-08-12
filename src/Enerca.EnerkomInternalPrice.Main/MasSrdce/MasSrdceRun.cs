@@ -12,7 +12,6 @@ using Enerca.Logic.Modules.OTValue.Db;
 using Enerca.Logic.Modules.OTValue.Db.DataTypes;
 using Enerca.Logic.Modules.OTValue.Tensor.Abstractions;
 using Enerca.Logic.Modules.OTValue.Tensor.Db;
-using Enerca.Logic.Modules.OTValue.Tensor.Implementations.Optimize;
 using Fastdo.Common.Modules.Files.Models;
 using Fastdo.Common.Modules.Formattings.Implementations;
 using TorchSharp;
@@ -33,7 +32,7 @@ public class MasSrdceRun
 
         var pathOut = pathSettings.PathOut.WithAddedDirPath("cp37_production100");
 
-        var plotAll = false;
+        var plotAll = true;
         var plotSettings = new EIPPlotSettings
         {
             PathSettings = pathOut.WithAddedDirPath("all"),
@@ -48,7 +47,6 @@ public class MasSrdceRun
             M7 = plotAll || false,
         };
         await RunComputeModelAsync(db: computeModel, plotSettings: plotSettings);
-        return;
 
         plotSettings.PathSettings = pathOut.WithAddedDirPath("without18");
         await RunComputeModelAsync(db: computeModelWithout18, plotSettings: plotSettings);
@@ -78,7 +76,7 @@ public class MasSrdceRun
     private static async Task RunComputeModelAsync(ComputeModelDb db, EIPPlotSettings plotSettings)
     {
         await plotSettings.PlotService.PlotAsync(db: db);
-        await RunOptimizationAsync(db: db, pathOut: plotSettings.PathSettings);
+        // await RunOptimizationAsync(db: db, pathOut: plotSettings.PathSettings);
     }
 
     private static async Task RunOptimizationAsync(ComputeModelDb db, PathSettings pathOut)
