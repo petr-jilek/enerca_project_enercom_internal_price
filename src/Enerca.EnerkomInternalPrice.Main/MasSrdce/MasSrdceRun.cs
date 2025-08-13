@@ -1,8 +1,10 @@
 using Enerca.EnerkomInternalPrice.Logic;
 using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
+using Enerca.Logic.Common.Logger;
 using Enerca.Logic.Common.Tensor.Db;
 using Enerca.Logic.Common.Tensor.Extensions;
+using Enerca.Logic.EanTable;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
 using Enerca.Logic.Modules.External.Db;
@@ -12,6 +14,7 @@ using Enerca.Logic.Modules.OTValue.Db;
 using Enerca.Logic.Modules.OTValue.Db.DataTypes;
 using Enerca.Logic.Modules.OTValue.Tensor.Abstractions;
 using Enerca.Logic.Modules.OTValue.Tensor.Db;
+using Fastdo.Common.Modules.Files.Helpers;
 using Fastdo.Common.Modules.Files.Models;
 using Fastdo.Common.Modules.Formattings.Implementations;
 using TorchSharp;
@@ -32,7 +35,7 @@ public class MasSrdceRun
 
         var pathOut = pathSettings.PathOut.WithAddedDirPath("cp37_production100");
 
-        var plotAll = true;
+        var plotAll = false;
         var plotSettings = new EIPPlotSettings
         {
             PathSettings = pathOut.WithAddedDirPath("all"),
@@ -47,6 +50,7 @@ public class MasSrdceRun
             M7 = plotAll || false,
         };
         await RunComputeModelAsync(db: computeModel, plotSettings: plotSettings);
+        return;
 
         plotSettings.PathSettings = pathOut.WithAddedDirPath("without18");
         await RunComputeModelAsync(db: computeModelWithout18, plotSettings: plotSettings);
@@ -75,8 +79,8 @@ public class MasSrdceRun
 
     private static async Task RunComputeModelAsync(ComputeModelDb db, EIPPlotSettings plotSettings)
     {
-        await plotSettings.PlotService.PlotAsync(db: db);
-        // await RunOptimizationAsync(db: db, pathOut: plotSettings.PathSettings);
+        // await plotSettings.PlotService.PlotAsync(db: db);
+        await RunOptimizationAsync(db: db, pathOut: plotSettings.PathSettings);
     }
 
     private static async Task RunOptimizationAsync(ComputeModelDb db, PathSettings pathOut)
@@ -96,12 +100,12 @@ public class MasSrdceRun
                     continue;
                 }
 
-                // TODO: Remove
-                if (i > 4)
-                {
-                    mask[i, j] = 0;
-                    allocation[i, j] = 0;
-                }
+                // // TODO: Remove
+                // if (i > 4)
+                // {
+                //     mask[i, j] = 0;
+                //     allocation[i, j] = 0;
+                // }
 
                 var eanP = db.CPEntities[i].EnergyTariffs.Electricity?.Info.EanP;
                 var eanC = db.CPEntities[j].EnergyTariffs.Electricity?.Info.EanC;
@@ -143,13 +147,14 @@ public class MasSrdceRun
 
         var otValues = model.OTValues.IsOptimized().OfType<IOTValueTensor>().ToList();
 
-        Console.WriteLine(otValues.Count);
-
-        Console.WriteLine(model.Compute(years: 25).PresentValue);
+        Loggers.Logger = new LoggerNone();
 
         Console.WriteLine("Initial");
-        foreach (var otValue in otValues)
-            otValue.Value[4..5].PrintTensorAsJulia();
+        // foreach (var otValue in otValues)
+        //     otValue.Value[4..5].PrintTensorAsJulia();
+
+        Console.WriteLine("NPV:");
+        Console.WriteLine(model.Compute(years: 25).PresentValue);
 
         for (var i = 0; i < 10; i++)
         {
@@ -162,11 +167,18 @@ public class MasSrdceRun
                 );
                 otValue.OptimizerBase.Commit();
 
-                otValue.Value[4..5].PrintTensorAsJulia();
+                // otValue.Value[4..5].PrintTensorAsJulia();
 
                 Console.WriteLine("NPV:");
                 Console.WriteLine(model.Compute(years: 25).PresentValue);
             }
         }
+
+        await model
+            .GetEanTables(
+                cpEntityIds: externalModel.Info.CPEntityIds,
+                allocationCoefficients2DTensor: otValues.First().Value
+            )
+            .SaveToCsvAsync(path: pathOut);
     }
 }
