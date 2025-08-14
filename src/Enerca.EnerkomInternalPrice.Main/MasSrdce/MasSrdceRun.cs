@@ -2,22 +2,17 @@ using Enerca.EnerkomInternalPrice.Logic;
 using Enerca.EnerkomInternalPrice.Logic.Helpers;
 using Enerca.EnerkomInternalPrice.Logic.Models;
 using Enerca.Logic.Common.Logger;
-using Enerca.Logic.Common.Tensor.Db;
-using Enerca.Logic.Common.Tensor.Extensions;
 using Enerca.Logic.EanTable;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.Compute.Mappers;
 using Enerca.Logic.Modules.External.Db;
 using Enerca.Logic.Modules.External.Db.Community;
-using Enerca.Logic.Modules.OTValue.Abstractions.Extensions;
-using Enerca.Logic.Modules.OTValue.Db;
+using Enerca.Logic.Modules.External.Implementations.Community.Consts;
+using Enerca.Logic.Modules.External.Mappers.Community;
 using Enerca.Logic.Modules.OTValue.Db.DataTypes;
 using Enerca.Logic.Modules.OTValue.Tensor.Abstractions;
-using Enerca.Logic.Modules.OTValue.Tensor.Db;
-using Fastdo.Common.Modules.Files.Helpers;
 using Fastdo.Common.Modules.Files.Models;
 using Fastdo.Common.Modules.Formattings.Implementations;
-using TorchSharp;
 
 namespace Enerca.EnerkomInternalPrice.Main.MasSrdce;
 
@@ -35,7 +30,7 @@ public class MasSrdceRun
 
         var pathOut = pathSettings.PathOut.WithAddedDirPath("cp37_production100");
 
-        var plotAll = false;
+        var plotAll = true;
         var plotSettings = new EIPPlotSettings
         {
             PathSettings = pathOut.WithAddedDirPath("all"),
@@ -50,7 +45,6 @@ public class MasSrdceRun
             M7 = plotAll || false,
         };
         await RunComputeModelAsync(db: computeModel, plotSettings: plotSettings);
-        return;
 
         plotSettings.PathSettings = pathOut.WithAddedDirPath("without18");
         await RunComputeModelAsync(db: computeModelWithout18, plotSettings: plotSettings);
@@ -79,47 +73,12 @@ public class MasSrdceRun
 
     private static async Task RunComputeModelAsync(ComputeModelDb db, EIPPlotSettings plotSettings)
     {
-        // await plotSettings.PlotService.PlotAsync(db: db);
+        await plotSettings.PlotService.PlotAsync(db: db);
         await RunOptimizationAsync(db: db, pathOut: plotSettings.PathSettings);
     }
 
     private static async Task RunOptimizationAsync(ComputeModelDb db, PathSettings pathOut)
     {
-        var allocation = torch.ones(db.CPEntities.Count, db.CPEntities.Count);
-        var mask = torch.ones(db.CPEntities.Count, db.CPEntities.Count);
-
-        for (var i = 0; i < db.CPEntities.Count; i++)
-        {
-            for (var j = 0; j < db.CPEntities.Count; j++)
-            {
-                if (i == j)
-                {
-                    mask[i, j] = 0;
-                    allocation[i, j] = 0;
-
-                    continue;
-                }
-
-                // // TODO: Remove
-                // if (i > 4)
-                // {
-                //     mask[i, j] = 0;
-                //     allocation[i, j] = 0;
-                // }
-
-                var eanP = db.CPEntities[i].EnergyTariffs.Electricity?.Info.EanP;
-                var eanC = db.CPEntities[j].EnergyTariffs.Electricity?.Info.EanC;
-
-                if (eanP == null || eanC == null)
-                {
-                    mask[i, j] = 0;
-                    allocation[i, j] = 0;
-
-                    continue;
-                }
-            }
-        }
-
         var externalModel = new ExternalModelDb
         {
             Info = new ExternalModelInfoDb { CPEntityIds = [.. db.CPEntities.Select(x => x.InfoBasic.Id)] },
@@ -128,16 +87,6 @@ public class MasSrdceRun
                 InternalPriceBuy = new OTValueFloatDb { Value = 0 },
                 InternalPriceFee = new OTValueFloatDb { Value = 0 },
                 Method = ExternalModelCommunitySharingMethodConsts.Static,
-                AllocationCoefficients2Dor3DTensor = new OTValueTensorDb
-                {
-                    Settings = new OTValueSettingsDb { IsOptimized = true },
-                    Tensor = new TensorDb
-                    {
-                        Values = [.. allocation.flatten().ToFloatArray1D()],
-                        Shape = [.. allocation.shape],
-                    },
-                    Mask = new TensorDb { Values = [.. mask.flatten().ToFloatArray1D()], Shape = [.. mask.shape] },
-                },
             },
         };
 
@@ -145,40 +94,36 @@ public class MasSrdceRun
 
         var model = await db.ToModelAsync();
 
-        var otValues = model.OTValues.IsOptimized().OfType<IOTValueTensor>().ToList();
-
-        Loggers.Logger = new LoggerNone();
-
-        Console.WriteLine("Initial");
-        // foreach (var otValue in otValues)
-        //     otValue.Value[4..5].PrintTensorAsJulia();
-
-        Console.WriteLine("NPV:");
-        Console.WriteLine(model.Compute(years: 25).PresentValue);
-
-        for (var i = 0; i < 10; i++)
-        {
-            Console.WriteLine($"Epoch: {i}");
-
-            foreach (var otValue in otValues)
-            {
-                await otValue.OptimizerBase.ComputeAsync(f: () =>
-                    Task.FromResult(-model.Compute(years: 25).PresentValue)
-                );
-                otValue.OptimizerBase.Commit();
-
-                // otValue.Value[4..5].PrintTensorAsJulia();
-
-                Console.WriteLine("NPV:");
-                Console.WriteLine(model.Compute(years: 25).PresentValue);
-            }
-        }
-
-        await model
-            .GetEanTables(
-                cpEntityIds: externalModel.Info.CPEntityIds,
-                allocationCoefficients2DTensor: otValues.First().Value
+        var otValues = model
+            .OTValues.OfType<IOTValueTensor>()
+            .Where(x =>
+                x.Info.ResolvedLabel.Contains(ExternalModelCommunityOTValueConsts.AllocationCoefficients2DTensor)
             )
-            .SaveToCsvAsync(path: pathOut);
+            .ToList();
+
+        if (otValues.Count != 1)
+            throw new Exception("OTValues count is not 1");
+
+        var allocation = otValues.First();
+        allocation.Settings.IsOptimized = true;
+
+        Task<float> npv() => Task.FromResult(model.Compute(years: 25).PresentValue);
+
+        await allocation.OptimizeAsAllocationAsync(
+            f: async () => -await npv(),
+            onEpochEndCallback: async (part, epoch) =>
+            {
+                Loggers.Logger.Log($"Part: {part}, Epoch: {epoch}, NPV: {await npv()}");
+
+                await model
+                    .GetEanTables(
+                        cpEntityIds: externalModel.Info.CPEntityIds,
+                        allocationCoefficients2DTensor: allocation.Value
+                    )
+                    .SaveToCsvAsync(
+                        path: pathOut.WithAddedDirPath("EanTables").WithAddedDirPath($"{part}_Epoch_{epoch}")
+                    );
+            }
+        );
     }
 }

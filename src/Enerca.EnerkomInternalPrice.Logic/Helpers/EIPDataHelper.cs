@@ -1,6 +1,6 @@
 using Enerca.EnerkomInternalPrice.Logic.Consts;
 using Enerca.EnerkomInternalPrice.Logic.Models;
-using Enerca.Logic.Modules.Compute.Abstractions;
+using Enerca.Logic.Modules.Compute.Common;
 using Enerca.Logic.Modules.Compute.Db;
 using Enerca.Logic.Modules.CPEntity.Db;
 using Enerca.Logic.Modules.CPEntity.Db.Models;
