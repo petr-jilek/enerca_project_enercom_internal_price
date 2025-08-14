@@ -6,13 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Projects/**/*.json">
+    <Content Include="**/*.json">
       <IncludeInPackage>true</IncludeInPackage>
       <CopyToOutput>true</CopyToOutput>
       <BuildAction>Content</BuildAction>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Projects/**/*.csv">
+    <Content Include="**/*.csv">
       <IncludeInPackage>true</IncludeInPackage>
       <CopyToOutput>true</CopyToOutput>
       <BuildAction>Content</BuildAction>
