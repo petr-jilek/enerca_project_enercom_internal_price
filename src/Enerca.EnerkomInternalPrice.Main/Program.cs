@@ -13,5 +13,5 @@ EnercaPythonSettings.DefaultFormats = [FileExtensionConsts.PNG];
 
 PythonHelper.Initialize();
 
-// await MasRuzeRun.RunAsync();
+await MasRuzeRun.RunAsync();
 await MasSrdceRun.RunAsync();

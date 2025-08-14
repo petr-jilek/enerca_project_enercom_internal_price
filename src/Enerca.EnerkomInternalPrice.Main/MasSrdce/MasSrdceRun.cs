@@ -20,6 +20,8 @@ public class MasSrdceRun
 {
     public static async Task RunAsync()
     {
+        Loggers.Logger.Off();
+
         var pathSettings = new EIPPathSettings { PathProject = new() { DirPath = "MasSrdce" } };
 
         var computeModel = await EIPDataHelper.GetComputeModelAsync(pathSettings: pathSettings);
@@ -113,7 +115,9 @@ public class MasSrdceRun
             f: async () => -await npv(),
             onEpochEndCallback: async (part, epoch) =>
             {
+                Loggers.Logger.On();
                 Loggers.Logger.Log($"Part: {part}, Epoch: {epoch}, NPV: {await npv()}");
+                Loggers.Logger.Off();
 
                 await model
                     .GetEanTables(
