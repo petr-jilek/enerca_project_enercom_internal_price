@@ -75,7 +75,7 @@ public class MasSrdceRun
 
     private static async Task RunComputeModelAsync(ComputeModelDb db, EIPPlotSettings plotSettings)
     {
-        await plotSettings.PlotService.PlotAsync(db: db);
+        // await plotSettings.PlotService.PlotAsync(db: db);
         await RunOptimizationAsync(db: db, pathOut: plotSettings.PathSettings);
     }
 
@@ -113,10 +113,12 @@ public class MasSrdceRun
 
         await allocation.OptimizeAsAllocationAsync(
             f: async () => -await npv(),
-            onEpochEndCallback: async (part, epoch) =>
+            callback: async (part, epoch) =>
             {
+                var npv_ = await npv();
+
                 Loggers.Logger.On();
-                Loggers.Logger.Log($"Part: {part}, Epoch: {epoch}, NPV: {await npv()}");
+                Loggers.Logger.Log($"Part: {part}, Epoch: {epoch}, NPV: {npv_}");
                 Loggers.Logger.Off();
 
                 await model
@@ -125,7 +127,7 @@ public class MasSrdceRun
                         allocationCoefficients2DTensor: allocation.Value
                     )
                     .SaveToCsvAsync(
-                        path: pathOut.WithAddedDirPath("EanTables").WithAddedDirPath($"{part}_Epoch_{epoch}")
+                        path: pathOut.WithAddedDirPath("EanTables").WithAddedDirPath($"Part{part}_Epoch{epoch}")
                     );
             }
         );
